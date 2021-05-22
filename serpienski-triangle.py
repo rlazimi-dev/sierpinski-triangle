@@ -93,7 +93,7 @@ breaking up r into 3 Rects:
 |_____|____|
 '''
 
-def serp(canvas, r, base_width=100, draw_subproblems=False, draw_bounds=True):
+def serp(canvas, r, base_width=100, draw_subproblems=False, draw_bounds=False):
   if r.height() < base_width:
     inscribe_triangle(canvas,r)
   else:
@@ -138,7 +138,9 @@ serp(
     screen_height * 0.1,
     screen_width * 0.1
   ),
-  50
+  50,
+  True,
+  False
 )
 
 time.sleep(2)
