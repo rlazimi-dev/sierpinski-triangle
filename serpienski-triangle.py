@@ -93,8 +93,15 @@ breaking up r into 3 Rects:
 |_____|____|
 '''
 
-def serp(canvas, r, base_width=100, draw_subproblems=False, draw_bounds=False):
-  if r.height() < base_width:
+def serp(canvas, r, depth=5, draw_subproblems=False, draw_bounds=False):
+
+  #not necessary but looks better
+  if draw_subproblems:
+    draw_rect(canvas, r)
+  if draw_bounds:
+    inscribe_triangle(canvas, r)
+
+  if depth == 0:
     inscribe_triangle(canvas,r)
   else:
     rt = Rect(
@@ -118,16 +125,9 @@ def serp(canvas, r, base_width=100, draw_subproblems=False, draw_bounds=False):
       r.left + r.width() / 2
     )
 
-    #not necessary but looks better
-    if draw_subproblems:
-      draw_rect(canvas, r)
-    if draw_bounds:
-      inscribe_triangle(canvas, r)
-
-    #necessary
-    serp(canvas, rt, base_width, draw_subproblems, draw_bounds)
-    serp(canvas, rl, base_width, draw_subproblems, draw_bounds)
-    serp(canvas, rr, base_width, draw_subproblems, draw_bounds)
+    serp(canvas, rt, depth-1, draw_subproblems, draw_bounds)
+    serp(canvas, rl, depth-1, draw_subproblems, draw_bounds)
+    serp(canvas, rr, depth-1, draw_subproblems, draw_bounds)
 
 
 serp(
@@ -138,7 +138,7 @@ serp(
     screen_height * 0.1,
     screen_width * 0.1
   ),
-  50,
+  7,
   True,
   False
 )
