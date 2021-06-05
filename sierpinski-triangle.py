@@ -1,13 +1,20 @@
 import turtle
 import math
 import time
+import argparse
 
-"""
-TODO:
-- define the functions needed to make the recursive implementation possible
-- triangles are equilateral - 60deg turns
-- define the function
-"""
+parser = argparse.ArgumentParser(description='Draw a Sierpinski Triangle')
+parser.add_argument('--no-squares', dest='squares', action='store_false', help='do not draw the rectangles that represent the recursion subproblems')
+parser.add_argument('--triangles', dest='triangles', action='store_true', help='draw the parent triangle before recursing')
+parser.set_defaults(
+  squares=True,
+  triangles=False
+)
+
+args = parser.parse_args()
+draw_subproblems = args.squares
+draw_parent_triangle = args.triangles
+
 
 canvas = turtle.Turtle()
 
@@ -17,7 +24,7 @@ canvas.screen.setworldcoordinates(0, 0, screen_width, screen_height)
 
 
 class Rect:
-  def __init__(self,top: int, right: int, bottom: int, left: int):
+  def __init__(self, top, right, bottom, left):
     if top < bottom:
       raise Exception('top < bottom')
     elif right < left:
@@ -95,9 +102,6 @@ breaking up r into 3 Rects:
 
 def serp(canvas, r, depth=5, draw_subproblems=False, draw_bounds=False):
 
-  #not necessary but looks better
-  if draw_subproblems:
-    draw_rect(canvas, r)
   if draw_bounds:
     inscribe_triangle(canvas, r)
 
@@ -125,22 +129,31 @@ def serp(canvas, r, depth=5, draw_subproblems=False, draw_bounds=False):
       r.left + r.width() / 2
     )
 
+    if draw_subproblems:
+      draw_rect(canvas, rt)
+      draw_rect(canvas, rl)
+      draw_rect(canvas, rr)
+
     serp(canvas, rt, depth-1, draw_subproblems, draw_bounds)
     serp(canvas, rl, depth-1, draw_subproblems, draw_bounds)
     serp(canvas, rr, depth-1, draw_subproblems, draw_bounds)
 
 
+problem = Rect(
+  screen_height * 0.9,
+  screen_width * 0.9,
+  screen_height * 0.1,
+  screen_width * 0.1
+)
+if draw_subproblems:
+  draw_rect(canvas, problem)
+
 serp(
   canvas,
-  Rect(
-    screen_height * 0.9,
-    screen_width * 0.9,
-    screen_height * 0.1,
-    screen_width * 0.1
-  ),
-  7,
-  True,
-  False
+  problem,
+  6,
+  draw_subproblems,
+  draw_parent_triangle
 )
 
 time.sleep(2)
