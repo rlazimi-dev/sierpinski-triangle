@@ -4,14 +4,17 @@ import time
 import argparse
 
 parser = argparse.ArgumentParser(description='Draw a Sierpinski Triangle')
+parser.add_argument('--depth', dest='depth', type=int, help='the amount of times to recurse')
 parser.add_argument('--no-squares', dest='squares', action='store_false', help='do not draw the rectangles that represent the recursion subproblems')
 parser.add_argument('--triangles', dest='triangles', action='store_true', help='draw the parent triangle before recursing')
 parser.set_defaults(
+  depth=6,
   squares=True,
   triangles=False
 )
 
 args = parser.parse_args()
+depth = args.depth
 draw_subproblems = args.squares
 draw_parent_triangle = args.triangles
 
@@ -151,9 +154,9 @@ if draw_subproblems:
 serp(
   canvas,
   problem,
-  6,
+  depth,
   draw_subproblems,
   draw_parent_triangle
 )
 
-time.sleep(2)
+time.sleep(10)
